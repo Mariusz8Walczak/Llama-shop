@@ -10,15 +10,15 @@ import { MongooseModule } from '@nestjs/mongoose';
     imports: [
         SampleModule,
         ConfigModule.forRoot({
-            isGlobal: true, // ConfigService dostępny globalnie
+            isGlobal: true,
         }),
         DatabaseModule,
         MongooseModule.forRootAsync({
-            imports: [ConfigModule], // Wstrzykujemy ConfigModule
+            imports: [ConfigModule],
             useFactory: async (configService: ConfigService) => ({
-                uri: configService.get<string>('MONGODB_URI', 'mongodb://127.0.0.1:27017/llamas'), // Domyślny URI
+                uri: configService.get<string>('MONGODB_URI', 'mongodb://127.0.0.1:27017/llamas'),
             }),
-            inject: [ConfigService], // Wstrzyknięcie ConfigService
+            inject: [ConfigService],
         }),
     ],
     controllers: [AppController],
