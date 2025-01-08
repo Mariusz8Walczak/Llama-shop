@@ -1,20 +1,20 @@
-import { ConfigService } from '@nestjs/config';
 import { DataSource } from 'typeorm';
+import * as dotenv from 'dotenv';
 
-const configService = new ConfigService();
+dotenv.config(); // Ładuje zmienne środowiskowe z pliku .env
 
 const AppDataSource = new DataSource({
     type: 'mysql',
-    host: configService.get<string>('MYSQL_HOST', '127.0.0.1'),
-    port: configService.get<number>('MYSQL_PORT', 3306),
-    username: configService.get<string>('MYSQL_USER', 'root'),
-    password: configService.get<string>('MYSQL_PASSWORD', 'password'),
-    database: configService.get<string>('MYSQL_DATABASE', 'default_db'),
-    synchronize: configService.get<boolean>('DB_SYNCHRONIZE', false),
-    logging: configService.get<boolean>('DB_LOGGING', false),
-    entities: ['src/**/domain/entities/*.entity{.ts,.js}'],
-    migrations: ['src/database/migrations/*-migration.ts'],
-    migrationsRun: configService.get<boolean>('MIGRATIONS_RUN', false),
+    host: process.env.MYSQL_HOST || '127.0.0.1',
+    port: parseInt(process.env.MYSQL_PORT, 10) || 3306,
+    username: process.env.MYSQL_USER || 'root',
+    password: process.env.MYSQL_PASSWORD || 'password',
+    database: process.env.MYSQL_DATABASE || 'default_db',
+    synchronize: process.env.DB_SYNCHRONIZE === 'true',
+    logging: process.env.DB_LOGGING === 'true',
+    entities: ['src/**/domain/entities/*.entity.{ts,js}'],
+    migrations: ['src/database/migrations/*.ts'],
+    migrationsRun: process.env.MIGRATIONS_RUN === 'true',
 });
 
 export default AppDataSource;
